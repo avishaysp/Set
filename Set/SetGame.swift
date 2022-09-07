@@ -18,12 +18,16 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
     private(set) var numberOfCardsToDisplay: Int
     
     
-    private var chosenCardsIndexes: [Int] {
+    private var chosenCardsIndecies: [Int] {
         get { cards.indices.filter({ cards[$0].isChosen }) }
         set {
             cards.indices.forEach { cards[$0].isChosen = false }
             newValue.forEach { cards[$0].isChosen = true }
         }
+    }
+    
+    var numberOfChosenCards: Int {
+        chosenCardsIndecies.count
     }
     
     var cardsToDisplay: [Card] {
@@ -35,8 +39,6 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
                 result.append(nilCard)
             }
         }
-        print("")
-        print(result)
         return result
     }
     
@@ -55,28 +57,28 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
     
     mutating func choose(_ card: Card) {
         if let indexOfChosenCard = cards.firstIndex(where: {$0.id == card.id}) {
-            switch (chosenCardsIndexes.contains(indexOfChosenCard), chosenCardsIndexes.count) {
+            switch (chosenCardsIndecies.contains(indexOfChosenCard), chosenCardsIndecies.count) {
             case (true, 3):
-                if threeCardsMatch(cards[chosenCardsIndexes[0]], cards[chosenCardsIndexes[1]], cards[chosenCardsIndexes[2]]) {
-                    cards[chosenCardsIndexes[0]].displayIndex = nil
-                    cards[chosenCardsIndexes[1]].displayIndex = nil
-                    cards[chosenCardsIndexes[2]].displayIndex = nil
+                if threeCardsMatch(cards[chosenCardsIndecies[0]], cards[chosenCardsIndecies[1]], cards[chosenCardsIndecies[2]]) {
+                    cards[chosenCardsIndecies[0]].displayIndex = nil
+                    cards[chosenCardsIndecies[1]].displayIndex = nil
+                    cards[chosenCardsIndecies[2]].displayIndex = nil
                 }
-                chosenCardsIndexes = []
-//                print("3 cards drawn")
+                chosenCardsIndecies = []
+                print("3 cards drawn")
             case (false, 3):
-                if threeCardsMatch(cards[chosenCardsIndexes[0]], cards[chosenCardsIndexes[1]], cards[chosenCardsIndexes[2]]) {
-                    cards[chosenCardsIndexes[0]].displayIndex = nil
-                    cards[chosenCardsIndexes[1]].displayIndex = nil
-                    cards[chosenCardsIndexes[2]].displayIndex = nil
+                if threeCardsMatch(cards[chosenCardsIndecies[0]], cards[chosenCardsIndecies[1]], cards[chosenCardsIndecies[2]]) {
+                    cards[chosenCardsIndecies[0]].displayIndex = nil
+                    cards[chosenCardsIndecies[1]].displayIndex = nil
+                    cards[chosenCardsIndecies[2]].displayIndex = nil
                 }
-                chosenCardsIndexes = []
+                chosenCardsIndecies = []
                 cards[indexOfChosenCard].isChosen = true
-//                print("3 cards drawn")
+                print("3 cards drawn")
             case (false, 2):
-                if threeCardsMatch(cards[chosenCardsIndexes[0]], cards[chosenCardsIndexes[1]], cards[indexOfChosenCard]) {
-                    cards[chosenCardsIndexes[0]].isMatched = true
-                    cards[chosenCardsIndexes[1]].isMatched = true
+                if threeCardsMatch(cards[chosenCardsIndecies[0]], cards[chosenCardsIndecies[1]], cards[indexOfChosenCard]) {
+                    cards[chosenCardsIndecies[0]].isMatched = true
+                    cards[chosenCardsIndecies[1]].isMatched = true
                     cards[indexOfChosenCard].isMatched = true
                 }
                 cards[indexOfChosenCard].isChosen = true
@@ -84,6 +86,7 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
                 cards[indexOfChosenCard].isChosen.toggle()
             }
         } else { assertionFailure() }
+        print("Chosen Cards Indecies: \(chosenCardsIndecies)")
     }
     
     mutating func drawThreeCards() {
@@ -114,7 +117,6 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
         }
     }
     
-
     
     //MARK: - Get Data
     
@@ -181,5 +183,10 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
     
     private func allThreeEquale<CardContentProperty: Equatable>(_ first: CardContentProperty, _ second: CardContentProperty, _ third: CardContentProperty) -> Bool {
         (first == second) && (second == third) && (third == first)
+    }
+    
+    func chosenCardsMatch() -> Bool {
+        return threeCardsMatch(cards[chosenCardsIndecies[0]], cards[chosenCardsIndecies[1]], cards[chosenCardsIndecies[2]])
+
     }
 }

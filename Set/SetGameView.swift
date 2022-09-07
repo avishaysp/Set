@@ -13,7 +13,7 @@ struct SetGameView: View {
         VStack {
             AspectVGrid(items: game.cardsToDisplay, aspectRatio: 1.42) {
                 card in CardView(card: card)
-                        .foregroundColor(card.highlightColor())
+                    .foregroundColor(game.highlightColor(of: card))
                         .onTapGesture { game.choose(card, playerNumber: 1) }
             }.padding()
             if game.canDrawMore() {

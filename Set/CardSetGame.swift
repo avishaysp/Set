@@ -81,6 +81,19 @@ class CardSetGame: ObservableObject {
         return nil
     }
     
+    func highlightColor(of card: Card) -> Color {
+        if model.numberOfChosenCards == 3 && card.isChosen {
+            return model.chosenCardsMatch() ? .green : .red
+        }
+        switch (card.isChosen, card.isMatched) {
+            case (true, true):
+                return .green
+            case (true, false):
+                return .yellow
+            default:
+                return .blue.opacity(0.5)
+            }
+    }
     
     
     
@@ -95,17 +108,3 @@ class CardSetGame: ObservableObject {
     }
 }
 
-    // MARK: - Extentions
-
-extension CardSetGame.Card {
-    func highlightColor() -> Color {
-        switch (self.isChosen, self.isMatched) {
-            case (true, true):
-                return .green
-            case (true, false):
-                return .yellow
-            default:
-                return .blue.opacity(0.5)
-            }
-    }
-}
