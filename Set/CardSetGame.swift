@@ -85,6 +85,9 @@ class CardSetGame: ObservableObject {
         if model.numberOfChosenCards == 3 && card.isChosen {
             return model.chosenCardsMatch() ? .green : .red
         }
+        if card.isHinted {
+            return .purple
+        }
         switch (card.isChosen, card.isMatched) {
             case (true, true):
                 return .green
@@ -92,19 +95,37 @@ class CardSetGame: ObservableObject {
                 return .yellow
             default:
                 return .blue.opacity(0.5)
-            }
+        }
     }
     
+    func canHint() -> Bool {
+        model.canHint()
+    }
     
     
     // MARK: - Intents
     
-    func choose(_ card: Card, playerNumber: Int) {
+    func choose(_ card: Card) {
         model.choose(card)
     }
     
     func drawThreeCards() {
         model.drawThreeCards()
     }
+    func restart() {
+        cards.shuffle()
+        model = SetGameModel(cards, nuemberOfCardsToDisplay: 12, nilCard: SetGameModel.Card(cardContent1: .black, cardContent2: .square, cardContent3: .blank, cardContent4: 0, id: -1))
+    }
+    
+    func hint() {
+        if canHint() {
+            model.Hint()
+        }
+    }
+    
+    func stopHinting() {
+        model.stopHinting()
+    }
 }
+
 

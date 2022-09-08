@@ -9,33 +9,76 @@ import SwiftUI
 
 struct SetGameView: View {
     @ObservedObject var game: CardSetGame
+    @State var isHinting = false
     var body: some View {
         VStack {
             AspectVGrid(items: game.cardsToDisplay, aspectRatio: 1.42) {
                 card in CardView(card: card)
                     .foregroundColor(game.highlightColor(of: card))
-                        .onTapGesture { game.choose(card, playerNumber: 1) }
+                    .onTapGesture {
+                        game.choose(card)
+                        print(card.displayIndex!)
+                    }
+                    .transition(.scale.combined(with: .opacity.combined(with: .move(edge: .bottom))))
             }.padding()
-            if game.canDrawMore() {
-                Button {
-                    game.drawThreeCards()
-                } label: {
+            HStack {
+                Spacer()
+                VStack {
+                    Image(systemName: "arrow.counterclockwise.circle")
+                    .font(.largeTitle)
+                    Text("Restart").padding(.bottom)
+                }
+                .foregroundColor(.blue)
+                .onTapGesture {withAnimation(.spring()) { game.restart() } }
+                Spacer()
+                if game.canDrawMore() {
                     VStack {
                         Image(systemName: "rectangle.stack.badge.plus")
                         .font(.largeTitle)
                         Text("Drow").padding(.bottom)
                     }
+                    .foregroundColor(.blue)
+                    .onTapGesture {withAnimation { game.drawThreeCards() } }
+                } else {
+                    VStack {
+                        Image(systemName: "rectangle.stack.badge.plus")
+                        .font(.largeTitle)
+                        Text("Drow")
+                        .padding(.bottom)
+                        .foregroundColor(.gray)
+                    }
                 }
-            } else {
-                VStack {
-                    Image(systemName: "rectangle.stack.badge.plus")
-                    .font(.largeTitle)
-                    Text("Drow")
-                    .padding(.bottom)
-                    .foregroundColor(.gray)
+                Spacer()
+                if game.canHint() {
+                    VStack {
+                        Image(systemName: "lightbulb")
+                        .font(.largeTitle)
+                        Text("Hint").padding(.bottom)
+                    }
+                    .foregroundColor(.blue)
+                    .onTapGesture {
+                        withAnimation(.easeInOut) {
+                            if !isHinting {
+                                game.hint()
+                                isHinting = true
+                            } else {
+                                game.stopHinting()
+                                isHinting = false
+                            }
+                        }
+                        
+                    }
+                } else {
+                    VStack {
+                        Image(systemName: "lightbulb")
+                        .font(.largeTitle)
+                        Text("Hint")
+                        .padding(.bottom)
+                        .foregroundColor(.gray)
+                    }
                 }
+                Spacer()
             }
-            
         }
     }
 }
@@ -51,8 +94,9 @@ struct CardView: View {
                     shape.fill().foregroundColor(.white)
                     shape.stroke(lineWidth: width * Consts.strokeConst)
                     Text(String(CardSetGame.matchingValueOf(card)!))
-                                    .foregroundColor(card.cardContent1)
-                                    .font(.system(size: width * Consts.fontConst))
+                        .foregroundColor(card.cardContent1)
+                        .font(.system(size: width * Consts.fontConst))
+                        .animation(.easeInOut(duration: 0.4))
                 } else {
                     shape.opacity(0)
                 }

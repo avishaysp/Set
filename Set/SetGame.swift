@@ -33,7 +33,7 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
     var cardsToDisplay: [Card] {
         var result = [Card]()
         for i in 0..<numberOfCardsToDisplay {
-            if let index = indexInCardsByDisplayIndex(displayIndex: i) {
+            if let index = indexInCardsByDisplayIndex(i) {
                 result.append(cards[index])
             } else {
                 result.append(nilCard)
@@ -63,9 +63,10 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
                     cards[chosenCardsIndecies[0]].displayIndex = nil
                     cards[chosenCardsIndecies[1]].displayIndex = nil
                     cards[chosenCardsIndecies[2]].displayIndex = nil
+                    chosenCardsIndecies = []
+                } else {
+                    chosenCardsIndecies = [indexOfChosenCard]
                 }
-                chosenCardsIndecies = []
-                print("3 cards drawn")
             case (false, 3):
                 if threeCardsMatch(cards[chosenCardsIndecies[0]], cards[chosenCardsIndecies[1]], cards[chosenCardsIndecies[2]]) {
                     cards[chosenCardsIndecies[0]].displayIndex = nil
@@ -74,18 +75,19 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
                 }
                 chosenCardsIndecies = []
                 cards[indexOfChosenCard].isChosen = true
-                print("3 cards drawn")
             case (false, 2):
                 if threeCardsMatch(cards[chosenCardsIndecies[0]], cards[chosenCardsIndecies[1]], cards[indexOfChosenCard]) {
                     cards[chosenCardsIndecies[0]].isMatched = true
                     cards[chosenCardsIndecies[1]].isMatched = true
                     cards[indexOfChosenCard].isMatched = true
+                    print("it's a match!")
                 }
                 cards[indexOfChosenCard].isChosen = true
             default:
                 cards[indexOfChosenCard].isChosen.toggle()
             }
         } else { assertionFailure() }
+        stopHinting()
         print("Chosen Cards Indecies: \(chosenCardsIndecies)")
     }
     
@@ -98,7 +100,8 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
             numberOfCardsToDisplay += 3
             insertThreeCardsTo(index0: numberOfCardsToDisplay - 3, index1: numberOfCardsToDisplay - 2, index2: numberOfCardsToDisplay - 1)
         }
-        print("three cards drawn. suposed to apear on screen")
+        stopHinting()
+        print("three cards drawn")
     }
     
     private mutating func insertThreeCardsTo(index0: Int, index1: Int, index2: Int) {
@@ -117,7 +120,19 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
         }
     }
     
+    mutating func Hint() {
+        if canHint() {
+            cards[cards.firstIndex { $0.id == threeDisplayedCardsThatMatchByID()!.1 }!].isHinted = true
+            print("hint given: \(cards[cards.firstIndex { $0.id == threeDisplayedCardsThatMatchByID()!.1 }!].displayIndex!)")
+        }
+    }
     
+    mutating func stopHinting() {
+        cards.indices.forEach { cards[$0].isHinted = false }
+        print("hinting stoped")
+    }
+    
+
     //MARK: - Get Data
     
     func canDrawMore() -> Bool {
@@ -140,8 +155,28 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
         return (index1, index2, index3)
     }
     
-    private func indexInCardsByDisplayIndex(displayIndex: Int) -> Int? {
+    private func indexInCardsByDisplayIndex(_ displayIndex: Int) -> Int? {
         cards.indices.firstIndex { cards[$0].displayIndex == displayIndex }
+    }
+    
+    func canHint() -> Bool {
+        threeDisplayedCardsThatMatchByID() != nil
+    }
+    
+    func threeDisplayedCardsThatMatchByID() -> (Int, Int, Int)? {
+        for i in 0..<numberOfCardsToDisplay {
+            for j in i + 1..<numberOfCardsToDisplay {
+                for k in j + 1..<numberOfCardsToDisplay {
+                    if threeCardsMatch(cardsToDisplay[i], cardsToDisplay[j], cardsToDisplay[k])
+                        && cardsToDisplay[i].displayIndex != nil
+                        && cardsToDisplay[j].displayIndex != nil
+                        && cardsToDisplay[k].displayIndex != nil {
+                        return (cardsToDisplay[i].id, cardsToDisplay[j].id, cardsToDisplay[k].id)
+                    }
+                }
+            }
+        }
+        return nil
     }
     
     // MARK: - Card
@@ -155,6 +190,7 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
         var isMatched = false
         var displayIndex: Int? // nil until displayed for the first time
         let id: Int
+        var isHinted = false
     }
     
     private func threeCardsMatch(_ first: Card, _ second: Card, _ third: Card) -> Bool {
