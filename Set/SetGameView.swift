@@ -20,7 +20,11 @@ struct SetGameView: View {
                         print(card.displayIndex!)
                     }
                     .transition(.scale.combined(with: .opacity.combined(with: .move(edge: .bottom))))
-            }.padding()
+            }
+            .padding()
+            .onAppear {
+                
+            }
             HStack {
                 Spacer()
                 VStack {
@@ -89,25 +93,28 @@ struct CardView: View {
         GeometryReader { geometry in
             let width = geometry.size.width
             ZStack {
-                let shape = RoundedRectangle(cornerRadius: width * Consts.cornerConst)
+                let shape = RoundedRectangle(cornerRadius: width * Constents.corner)
                 if card.displayIndex != nil {
                     shape.fill().foregroundColor(.white)
-                    shape.stroke(lineWidth: width * Consts.strokeConst)
+                    shape.stroke(lineWidth: width * Constents.stroke)
                     Text(String(CardSetGame.matchingValueOf(card)!))
                         .foregroundColor(card.cardContent1)
-                        .font(.system(size: width * Consts.fontConst))
                         .animation(.easeInOut(duration: 0.4))
+                        .font(.system(size: Constents.fontSize))
+                        .scaleEffect(width * Constents.fontScale / Constents.fontSize)
                 } else {
                     shape.opacity(0)
                 }
-            }.padding(width * Consts.paddingConst)
+            }.padding(width * Constents.padding)
         }
     }
-    private struct Consts {
-        static let cornerConst: CGFloat = 0.12
-        static let strokeConst: CGFloat = 0.03
-        static let fontConst: CGFloat = 0.25
-        static let paddingConst: CGFloat = 0.06
+    
+    private struct Constents {
+        static let corner: CGFloat = 0.12
+        static let stroke: CGFloat = 0.03
+        static let fontSize: CGFloat = 26
+        static let fontScale: CGFloat = 0.25
+        static let padding: CGFloat = 0.06
         
     }
 }
