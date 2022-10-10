@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6218B04B28D470EA009468FE /* Set___iPadApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6218B04A28D470EA009468FE /* Set___iPadApp.swift */; };
+		6218B04D28D470EA009468FE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6218B04C28D470EA009468FE /* ContentView.swift */; };
+		6218B04F28D470EB009468FE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6218B04E28D470EB009468FE /* Assets.xcassets */; };
+		6218B05328D470EB009468FE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6218B05228D470EB009468FE /* Preview Assets.xcassets */; };
 		6268BF8628C8E2D3002312CF /* Set_1_0App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6268BF7728C8E2D3002312CF /* Set_1_0App.swift */; };
 		6268BF8728C8E2D3002312CF /* Set_1_0App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6268BF7728C8E2D3002312CF /* Set_1_0App.swift */; };
 		6268BF8828C8E2D3002312CF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6268BF7828C8E2D3002312CF /* ContentView.swift */; };
@@ -23,6 +27,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6218B04828D470EA009468FE /* Set - iPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Set - iPad.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6218B04A28D470EA009468FE /* Set___iPadApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Set___iPadApp.swift"; sourceTree = "<group>"; };
+		6218B04C28D470EA009468FE /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		6218B04E28D470EB009468FE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6218B05028D470EB009468FE /* Set___iPad.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Set___iPad.entitlements"; sourceTree = "<group>"; };
+		6218B05228D470EB009468FE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		6268BF7728C8E2D3002312CF /* Set_1_0App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Set_1_0App.swift; sourceTree = "<group>"; };
 		6268BF7828C8E2D3002312CF /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		6268BF7928C8E2D3002312CF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -41,6 +51,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		6218B04528D470EA009468FE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6268BF7B28C8E2D3002312CF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -65,6 +82,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6218B04928D470EA009468FE /* Set - iPad */ = {
+			isa = PBXGroup;
+			children = (
+				6218B04A28D470EA009468FE /* Set___iPadApp.swift */,
+				6218B04C28D470EA009468FE /* ContentView.swift */,
+				6218B04E28D470EB009468FE /* Assets.xcassets */,
+				6218B05028D470EB009468FE /* Set___iPad.entitlements */,
+				6218B05128D470EB009468FE /* Preview Content */,
+			);
+			path = "Set - iPad";
+			sourceTree = "<group>";
+		};
+		6218B05128D470EB009468FE /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				6218B05228D470EB009468FE /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
 		6268BF7628C8E2D3002312CF /* Shared */ = {
 			isa = PBXGroup;
 			children = (
@@ -89,6 +126,7 @@
 				62D2BBB52893FED600D4118C /* Set */,
 				6268BF7628C8E2D3002312CF /* Shared */,
 				6268BF8428C8E2D3002312CF /* macOS */,
+				6218B04928D470EA009468FE /* Set - iPad */,
 				62D2BBB42893FED600D4118C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -99,6 +137,7 @@
 				62D2BBB32893FED600D4118C /* Set.app */,
 				6268BF7E28C8E2D3002312CF /* Set 1.0.app */,
 				6268BF8328C8E2D3002312CF /* Set 1.0.app */,
+				6218B04828D470EA009468FE /* Set - iPad.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -129,6 +168,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		6218B04728D470EA009468FE /* Set - iPad */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6218B05428D470EB009468FE /* Build configuration list for PBXNativeTarget "Set - iPad" */;
+			buildPhases = (
+				6218B04428D470EA009468FE /* Sources */,
+				6218B04528D470EA009468FE /* Frameworks */,
+				6218B04628D470EA009468FE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Set - iPad";
+			productName = "Set - iPad";
+			productReference = 6218B04828D470EA009468FE /* Set - iPad.app */;
+			productType = "com.apple.product-type.application";
+		};
 		6268BF7D28C8E2D3002312CF /* Set 1.0 (iOS) */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6268BF9028C8E2D3002312CF /* Build configuration list for PBXNativeTarget "Set 1.0 (iOS)" */;
@@ -187,9 +243,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1340;
-				LastUpgradeCheck = 1340;
+				LastSwiftUpdateCheck = 1400;
+				LastUpgradeCheck = 1400;
 				TargetAttributes = {
+					6218B04728D470EA009468FE = {
+						CreatedOnToolsVersion = 14.0;
+					};
 					6268BF7D28C8E2D3002312CF = {
 						CreatedOnToolsVersion = 13.4.1;
 					};
@@ -217,11 +276,21 @@
 				62D2BBB22893FED600D4118C /* Set */,
 				6268BF7D28C8E2D3002312CF /* Set 1.0 (iOS) */,
 				6268BF8228C8E2D3002312CF /* Set 1.0 (macOS) */,
+				6218B04728D470EA009468FE /* Set - iPad */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		6218B04628D470EA009468FE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6218B05328D470EB009468FE /* Preview Assets.xcassets in Resources */,
+				6218B04F28D470EB009468FE /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6268BF7C28C8E2D3002312CF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -250,6 +319,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		6218B04428D470EA009468FE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6218B04D28D470EA009468FE /* ContentView.swift in Sources */,
+				6218B04B28D470EA009468FE /* Set___iPadApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6268BF7A28C8E2D3002312CF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -283,6 +361,88 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		6218B05528D470EB009468FE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Set - iPad/Set___iPad.entitlements";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"Set - iPad/Preview Content\"";
+				DEVELOPMENT_TEAM = 8GV7R695JL;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "ac.tau.avishays.Set---iPad";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6218B05628D470EB009468FE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "Set - iPad/Set___iPad.entitlements";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_ASSET_PATHS = "\"Set - iPad/Preview Content\"";
+				DEVELOPMENT_TEAM = 8GV7R695JL;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "ac.tau.avishays.Set---iPad";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		6268BF8C28C8E2D3002312CF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -350,9 +510,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 8GV7R695JL;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -378,9 +540,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = macOS/macOS.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 8GV7R695JL;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -450,7 +614,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -504,7 +668,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -532,7 +696,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -564,7 +728,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -581,6 +745,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		6218B05428D470EB009468FE /* Build configuration list for PBXNativeTarget "Set - iPad" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6218B05528D470EB009468FE /* Debug */,
+				6218B05628D470EB009468FE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		6268BF9028C8E2D3002312CF /* Build configuration list for PBXNativeTarget "Set 1.0 (iOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -1,6 +1,6 @@
 //
 //  CardSetGame.swift
-//  Set
+//  Set 
 //
 //  Created by Avishay Spitzer on 29/07/2022.
 //
@@ -14,6 +14,10 @@ class CardSetGame: ObservableObject {
     
     var cardsToDisplay: [Card] {
         model.cardsToDisplay
+    }
+    
+    var score: Int {
+        model.score
     }
     
     func canDrawMore() -> Bool {
@@ -35,13 +39,13 @@ class CardSetGame: ObservableObject {
             }
         }
         cards.shuffle()
-        model = SetGameModel(cards, nuemberOfCardsToDisplay: 12, nilCard: SetGameModel.Card(cardContent1: .red, cardContent2: .square, cardContent3: .blank, cardContent4: 0, id: -1))
+        model = SetGameModel(cards, nuemberOfCardsToDisplay: 12)
         
     }
     
     // MARK: - Data
     
-    static let colors = [Color.red, Color.blue, Color.green]
+    static let colors = [Color.red, Color.purple, Color.green]
     
     enum Shape: CaseIterable {
         case circle, triangle, square
@@ -86,7 +90,7 @@ class CardSetGame: ObservableObject {
             return model.chosenCardsMatch() ? .green : .red
         }
         if card.isHinted {
-            return .purple
+            return .orange
         }
         switch (card.isChosen, card.isMatched) {
             case (true, true):
@@ -94,12 +98,20 @@ class CardSetGame: ObservableObject {
             case (true, false):
                 return .yellow
             default:
-                return .blue.opacity(0.5)
+            return .cyan
         }
     }
     
     func canHint() -> Bool {
         model.canHint()
+    }
+    
+    var isHinting: Bool {
+        model.isHinting
+    }
+    
+    func nextChooseChangesLayout() -> Bool {
+        model.nextChooseChangesLayout()
     }
     
     
@@ -114,7 +126,7 @@ class CardSetGame: ObservableObject {
     }
     func restart() {
         cards.shuffle()
-        model = SetGameModel(cards, nuemberOfCardsToDisplay: 12, nilCard: SetGameModel.Card(cardContent1: .black, cardContent2: .square, cardContent3: .blank, cardContent4: 0, id: -1))
+        model = SetGameModel(cards, nuemberOfCardsToDisplay: 12)
     }
     
     func hint() {

@@ -14,6 +14,7 @@ struct SetApp: App {
     var body: some Scene {
         WindowGroup {
             SetGameView(game: game)
+            .edgesIgnoringSafeArea(.top)
         }
     }
 }

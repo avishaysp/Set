@@ -14,8 +14,9 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
     //MARK: - Parameters
     
     private(set) var cards: [Card]
-    private var nilCard: Card
-    private(set) var numberOfCardsToDisplay: Int
+    var numberOfCardsToDisplay: Int
+    var isHinting: Bool
+    var score: Int
     
     
     private var chosenCardsIndecies: [Int] {
@@ -32,60 +33,48 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
     
     var cardsToDisplay: [Card] {
         var result = [Card]()
-        for i in 0..<numberOfCardsToDisplay {
-            if let index = indexInCardsByDisplayIndex(i) {
-                result.append(cards[index])
+        var i = 0
+        while result.count < numberOfCardsToDisplay {
+            if cards[i].isMatched {
+                i += 1
             } else {
-                result.append(nilCard)
+                result.append(cards[i])
+                i += 1
             }
         }
         return result
     }
     
-    init(_ cards: [Card], nuemberOfCardsToDisplay: Int, nilCard: Card) {
+    init(_ cards: [Card], nuemberOfCardsToDisplay: Int) {
         self.cards = cards
-        self.nilCard = nilCard
         self.numberOfCardsToDisplay = nuemberOfCardsToDisplay
-        for i in 0..<min(cards.count, numberOfCardsToDisplay) {
-            self.cards[i].displayIndex = i
-        }
+        isHinting = false
+        score = 0
     }
     
     //MARK: - Functionality
-    
-    //Cards
-    
+        
     mutating func choose(_ card: Card) {
         if let indexOfChosenCard = cards.firstIndex(where: {$0.id == card.id}) {
-            switch (chosenCardsIndecies.contains(indexOfChosenCard), chosenCardsIndecies.count) {
-            case (true, 3):
-                if threeCardsMatch(cards[chosenCardsIndecies[0]], cards[chosenCardsIndecies[1]], cards[chosenCardsIndecies[2]]) {
-                    cards[chosenCardsIndecies[0]].displayIndex = nil
-                    cards[chosenCardsIndecies[1]].displayIndex = nil
-                    cards[chosenCardsIndecies[2]].displayIndex = nil
-                    chosenCardsIndecies = []
-                } else {
-                    chosenCardsIndecies = [indexOfChosenCard]
-                }
-            case (false, 3):
-                if threeCardsMatch(cards[chosenCardsIndecies[0]], cards[chosenCardsIndecies[1]], cards[chosenCardsIndecies[2]]) {
-                    cards[chosenCardsIndecies[0]].displayIndex = nil
-                    cards[chosenCardsIndecies[1]].displayIndex = nil
-                    cards[chosenCardsIndecies[2]].displayIndex = nil
-                }
-                chosenCardsIndecies = []
-                cards[indexOfChosenCard].isChosen = true
-            case (false, 2):
+            if !chosenCardsIndecies.contains(indexOfChosenCard) && chosenCardsIndecies.count == 2 {
                 if threeCardsMatch(cards[chosenCardsIndecies[0]], cards[chosenCardsIndecies[1]], cards[indexOfChosenCard]) {
                     cards[chosenCardsIndecies[0]].isMatched = true
                     cards[chosenCardsIndecies[1]].isMatched = true
                     cards[indexOfChosenCard].isMatched = true
                     print("it's a match!")
+                    score += 3
+                    chosenCardsIndecies = []
+                    numberOfCardsToDisplay -= 3
+                    if numberOfCardsToDisplay < 12 {
+                        drawThreeCards()
+                    }
+                } else {
+                    cards[indexOfChosenCard].isChosen.toggle()
                 }
+            } else if chosenCardsIndecies.count == 3 {
+                chosenCardsIndecies = []
                 cards[indexOfChosenCard].isChosen = true
-            default:
-                cards[indexOfChosenCard].isChosen.toggle()
-            }
+            } else { cards[indexOfChosenCard].isChosen.toggle() }
         } else { assertionFailure() }
         stopHinting()
         print("Chosen Cards Indecies: \(chosenCardsIndecies)")
@@ -94,41 +83,39 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
     mutating func drawThreeCards() {
         /* Changes the cards displayed by mutating their display indecies.
            Utelizes the funcs getFirstThreeEmptyDisplayIndecies() and insertThreeCardsTo(index0: Int, index1: Int, index2: Int) */
-        if let indecies = getFirstThreeEmptyDisplayIndecies() {
-            insertThreeCardsTo(index0: indecies.0, index1: indecies.1, index2: indecies.2)
-        } else {
-            numberOfCardsToDisplay += 3
-            insertThreeCardsTo(index0: numberOfCardsToDisplay - 3, index1: numberOfCardsToDisplay - 2, index2: numberOfCardsToDisplay - 1)
-        }
+        numberOfCardsToDisplay += 3
         stopHinting()
         print("three cards drawn")
     }
     
-    private mutating func insertThreeCardsTo(index0: Int, index1: Int, index2: Int) {
-        let indexesOfDrawnCards = drawThreeIndecies()
-        if let index = indexesOfDrawnCards.2 {
-            assert(cards[index].displayIndex == nil)
-            cards[index].displayIndex = index2
-        }
-        if let index = indexesOfDrawnCards.1 {
-            assert(cards[index].displayIndex == nil)
-            cards[index].displayIndex = index1
-        }
-        if let index = indexesOfDrawnCards.0 {
-            assert(cards[index].displayIndex == nil)
-            cards[index].displayIndex = index0
-        }
-    }
-    
     mutating func Hint() {
         if canHint() {
-            cards[cards.firstIndex { $0.id == threeDisplayedCardsThatMatchByID()!.1 }!].isHinted = true
-            print("hint given: \(cards[cards.firstIndex { $0.id == threeDisplayedCardsThatMatchByID()!.1 }!].displayIndex!)")
+            if !chosenCardsIndecies.isEmpty {
+                if chosenCardsIndecies.count <= 1 {
+                    cards[chosenCardsIndecies[0]].isChosen = false
+                } else if chosenCardsIndecies.count <= 2 {
+                    cards[chosenCardsIndecies[1]].isChosen = false
+                } else if chosenCardsIndecies.count <= 3 {
+                    cards[chosenCardsIndecies[2]].isChosen = false
+                }
+                chosenCardsIndecies = []
+            }
+            let randomIndex = [0, 1, 2].randomElement()!
+            switch randomIndex {
+            case 0:
+                cards[cards.firstIndex { $0.id == threeDisplayedCardsThatMatchByID()!.0 }!].isHinted = true
+            case 1:
+                cards[cards.firstIndex { $0.id == threeDisplayedCardsThatMatchByID()!.1 }!].isHinted = true
+            default:
+                cards[cards.firstIndex { $0.id == threeDisplayedCardsThatMatchByID()!.2 }!].isHinted = true
+            }
+            isHinting = true
         }
     }
     
     mutating func stopHinting() {
         cards.indices.forEach { cards[$0].isHinted = false }
+        isHinting = false
         print("hinting stoped")
     }
     
@@ -136,27 +123,7 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
     //MARK: - Get Data
     
     func canDrawMore() -> Bool {
-        !cards.filter({ $0.displayIndex == nil && !$0.isMatched }).isEmpty
-    }
-    
-    private func getFirstThreeEmptyDisplayIndecies() -> (Int, Int, Int)? {
-        let nilCardsIndecies = cardsToDisplay.indices.filter { cardsToDisplay[$0].displayIndex == nil }
-        if nilCardsIndecies.count > 0 {
-            return (nilCardsIndecies[0], nilCardsIndecies[1], nilCardsIndecies[2])
-        }
-        return nil
-    }
-    
-    private func drawThreeIndecies() -> (Int?, Int?, Int?) {
-        var cardsNotDisplayed = cards.indices.filter( { cards[$0].displayIndex == nil && cards[$0].isMatched == false } ).shuffled()
-        let index1 = cardsNotDisplayed.popLast()
-        let index2 = cardsNotDisplayed.popLast()
-        let index3 = cardsNotDisplayed.popLast()
-        return (index1, index2, index3)
-    }
-    
-    private func indexInCardsByDisplayIndex(_ displayIndex: Int) -> Int? {
-        cards.indices.firstIndex { cards[$0].displayIndex == displayIndex }
+        numberOfCardsToDisplay + cards.filter({ $0.isMatched }).count < cards.count
     }
     
     func canHint() -> Bool {
@@ -164,19 +131,20 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
     }
     
     func threeDisplayedCardsThatMatchByID() -> (Int, Int, Int)? {
-        for i in 0..<numberOfCardsToDisplay {
-            for j in i + 1..<numberOfCardsToDisplay {
-                for k in j + 1..<numberOfCardsToDisplay {
-                    if threeCardsMatch(cardsToDisplay[i], cardsToDisplay[j], cardsToDisplay[k])
-                        && cardsToDisplay[i].displayIndex != nil
-                        && cardsToDisplay[j].displayIndex != nil
-                        && cardsToDisplay[k].displayIndex != nil {
+        for i in 0..<min(numberOfCardsToDisplay, cardsToDisplay.count) {
+            for j in i + 1..<min(numberOfCardsToDisplay, cardsToDisplay.count) {
+                for k in j + 1..<min(numberOfCardsToDisplay, cardsToDisplay.count) {
+                    if threeCardsMatch(cardsToDisplay[i], cardsToDisplay[j], cardsToDisplay[k]) {
                         return (cardsToDisplay[i].id, cardsToDisplay[j].id, cardsToDisplay[k].id)
                     }
                 }
             }
         }
         return nil
+    }
+    
+    func nextChooseChangesLayout() -> Bool {
+        chosenCardsIndecies.count == 3 && threeCardsMatch(cards[chosenCardsIndecies[0]], cards[chosenCardsIndecies[1]], cards[chosenCardsIndecies[2]])
     }
     
     // MARK: - Card
@@ -188,7 +156,6 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
         let cardContent4: CardContent4
         var isChosen = false
         var isMatched = false
-        var displayIndex: Int? // nil until displayed for the first time
         let id: Int
         var isHinted = false
     }
