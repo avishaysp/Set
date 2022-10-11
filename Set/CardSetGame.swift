@@ -16,9 +16,6 @@ class CardSetGame: ObservableObject {
         model.cardsToDisplay
     }
     
-    var score: Int {
-        model.score
-    }
     
     func canDrawMore() -> Bool {
         model.canDrawMore()
@@ -114,6 +111,21 @@ class CardSetGame: ObservableObject {
         model.nextChooseChangesLayout()
     }
     
+    var player1Score: Int {
+        model.player1.score
+    }
+    
+    var player2Score: Int {
+        model.player2.score
+    }
+    
+    var playerPlaying: Int {
+        model.playerPlaying
+    }
+    
+    var someoneIsPlaying: Bool {
+        model.someoneIsPlaying
+    }
     
     // MARK: - Intents
     
@@ -137,6 +149,15 @@ class CardSetGame: ObservableObject {
     
     func stopHinting() {
         model.stopHinting()
+    }
+    
+    func pressSet(byPlayer playerNumber: Int) {
+        assert([1, 2].contains(playerNumber))
+        if model.playerPlaying == 0 {
+            model.declareSet(by: playerNumber)
+        } else {
+            model.undeclareSet()
+        }
     }
 }
 

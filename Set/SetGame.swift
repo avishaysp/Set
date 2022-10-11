@@ -16,7 +16,37 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
     private(set) var cards: [Card]
     var numberOfCardsToDisplay: Int
     var isHinting: Bool
-    var score: Int
+    private(set) var player1: Player
+    private(set) var player2: Player
+    
+    var playerPlaying: Int {
+        get {
+            switch (player1.isPlaying, player2.isPlaying) {
+            case (true, true):
+                assertionFailure()
+            case (false, false):
+                return 0
+            default:
+                return player1.isPlaying ? 1 : 2
+            }
+            return 0
+        }
+        set {
+            assert([0, 1, 2].contains(newValue))
+            if (newValue == 1 && player2.isPlaying) || (newValue == 2 && player1.isPlaying) { assertionFailure() }
+            else if newValue == 1 { player1.isPlaying = true }
+            else if newValue == 2 { player2.isPlaying = true }
+            else {
+                // must be zero
+                player1.isPlaying = false
+                player2.isPlaying = false
+            }
+        }
+    }
+    
+    var someoneIsPlaying: Bool {
+        playerPlaying != 0
+    }
     
     
     private var chosenCardsIndecies: [Int] {
@@ -49,12 +79,14 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
         self.cards = cards
         self.numberOfCardsToDisplay = nuemberOfCardsToDisplay
         isHinting = false
-        score = 0
+        player1 = Player(id: 1, score: 0)
+        player2 = Player(id: 2, score: 0)
     }
     
     //MARK: - Functionality
         
     mutating func choose(_ card: Card) {
+        assert([1, 2].contains(playerPlaying))
         if let indexOfChosenCard = cards.firstIndex(where: {$0.id == card.id}) {
             if !chosenCardsIndecies.contains(indexOfChosenCard) && chosenCardsIndecies.count == 2 {
                 if threeCardsMatch(cards[chosenCardsIndecies[0]], cards[chosenCardsIndecies[1]], cards[indexOfChosenCard]) {
@@ -62,7 +94,9 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
                     cards[chosenCardsIndecies[1]].isMatched = true
                     cards[indexOfChosenCard].isMatched = true
                     print("it's a match!")
-                    score += 3
+                    if playerPlaying == 1 { player1.score += 3}
+                    else { player2.score += 3 }
+                    playerPlaying = 0
                     chosenCardsIndecies = []
                     numberOfCardsToDisplay -= 3
                     if numberOfCardsToDisplay < 12 {
@@ -85,6 +119,7 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
            Utelizes the funcs getFirstThreeEmptyDisplayIndecies() and insertThreeCardsTo(index0: Int, index1: Int, index2: Int) */
         numberOfCardsToDisplay += 3
         stopHinting()
+        chosenCardsIndecies = []
         print("three cards drawn")
     }
     
@@ -119,6 +154,16 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
         print("hinting stoped")
     }
     
+    mutating func declareSet(by playerNumber: Int) {
+        assert([1, 2].contains(playerNumber))
+        playerPlaying = playerNumber
+        print("plying: \(playerPlaying)")
+    }
+    
+    mutating func undeclareSet() {
+        playerPlaying = 0
+        print("no one is playing")
+    }
 
     //MARK: - Get Data
     
@@ -191,5 +236,13 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
     func chosenCardsMatch() -> Bool {
         return threeCardsMatch(cards[chosenCardsIndecies[0]], cards[chosenCardsIndecies[1]], cards[chosenCardsIndecies[2]])
 
+    }
+    
+    //MARK: - Player
+    
+    struct Player: Identifiable {
+        let id: Int
+        var score: Int
+        var isPlaying = false
     }
 }

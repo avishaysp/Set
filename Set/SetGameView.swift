@@ -15,17 +15,15 @@ struct SetGameView: View {
     
     var body: some View {
         VStack {
-            Text("Score: \(game.score)")
-                .foregroundColor(.blue)
-                .font(.headline)
-                .padding(.top)
-            gameBody.padding([.leading, .bottom, .trailing])
-            Spacer()
-            if !allDealt {
-                deckBody
-                    .transition(.asymmetric(insertion: .opacity, removal:  .opacity.animation(.easeInOut.delay(Constents.totalDealDuration))))
+            controlsBody2
+            ZStack(alignment: .bottomTrailing) {
+                gameBody
+                Spacer()
+                if !allDealt {
+                    deckBody
+                }
             }
-            controlsBody.padding(.bottom)
+            controlsBody1
         }
     }
     
@@ -46,6 +44,7 @@ struct SetGameView: View {
     private func zIndex(of card: CardSetGame.Card) -> Double {
         -Double(game.cardsToDisplay.firstIndex(where: { $0.id == card.id } ) ?? 0 )
     }
+
     
     var gameBody: some View {
         AspectVGrid(items: game.cardsToDisplay, aspectRatio: 1.42) {
@@ -53,21 +52,17 @@ struct SetGameView: View {
             if isDealt(card) {
                 CardView(card: card)
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
-                    .foregroundColor(game.highlightColor(of: card))
+                    .foregroundColor(game.someoneIsPlaying ? game.highlightColor(of: card) : .gray)
                     .zIndex(zIndex(of: card))
                     .onTapGesture {
-                        if game.nextChooseChangesLayout() {
-                            withAnimation(.spring()) {
-                                game.choose(card)
-                            }
-                        } else {
+                        if game.someoneIsPlaying {
                             game.choose(card)
                         }
                     }
                     .transition(.scale.combined(with: .opacity.combined(with: .move(edge: .bottom))))
-            } else { Color.clear }
+                    } else { Color.clear }
+            }.padding([.leading, .bottom, .trailing])
         }
-    }
     
     private func coinFlip() -> Bool {
         let results = [true, false]
@@ -75,24 +70,21 @@ struct SetGameView: View {
     }
     
     var deckBody: some View {
-        @State var touched = false
-        return VStack {
-            ZStack {
-                ForEach(game.cardsToDisplay.filter { !isDealt($0) }) { card in
-                    ZStack {
-                        CardView(card: card)
+        return ZStack {
+            ForEach(game.cardsToDisplay.filter { !isDealt($0) }) { card in
+                ZStack {
+                    CardView(card: card)
                         .matchedGeometryEffect(id: card.id, in: dealingNamespace)
-                        .foregroundColor(game.highlightColor(of: card))
+                        .foregroundColor(.gray)
                         .rotationEffect(coinFlip() ? Angle(degrees: 0) : (coinFlip() ? Angle(degrees: 2) : Angle(degrees: -2)))
-                    }
-                    .transition(.scale)
-                    .zIndex(zIndex(of: card))
                 }
+                .transition(.scale)
+                .zIndex(zIndex(of: card))
             }
-            .frame(width: Constents.undealtWidth, height: Constents.undealtHeight)
         }
+        .frame(width: Constents.undealtWidth, height: Constents.undealtHeight)
+        .transition(.asymmetric(insertion: .opacity, removal:  .opacity.animation(.easeInOut.delay(Constents.totalDealDuration))))
         .onTapGesture {
-            touched = true
             for i in 0..<game.cards.count {
                 withAnimation(.easeInOut.delay(Double(i) * (Constents.totalDealDuration / Double(game.cardsToDisplay.count))))
                 {
@@ -105,15 +97,83 @@ struct SetGameView: View {
         }
     }
     
-    var controlsBody: some View {
-        HStack {
-            Spacer()
-            restartButton
-            Spacer()
-            drowMoreButton
-            Spacer()
-            hintButton
-            Spacer()
+    var controlsBody1: some View {
+        VStack {
+            Text("Score: \(game.player1Score)").foregroundColor(.blue)
+            HStack {
+                Spacer()
+                setButton1
+                Spacer()
+                restartButton
+                Spacer()
+                drowMoreButton
+                Spacer()
+                hintButton
+                Spacer()
+            }.padding(.bottom)
+        }
+    }
+    
+    var controlsBody2: some View {
+        VStack {
+            Text("Score: \(game.player2Score)").foregroundColor(.blue)
+            HStack {
+                Spacer()
+                setButton2
+                Spacer()
+                restartButton
+                Spacer()
+                drowMoreButton
+                Spacer()
+                hintButton
+                Spacer()
+            }.padding(.bottom)
+        }.rotationEffect(.degrees(180))
+    }
+    
+    var setButton1: some View {
+        Group {
+            if allDealt && game.playerPlaying != 2 {
+                VStack {
+                    Image(systemName: "figure.wave.circle")
+                        .font(.largeTitle)
+                    Text("Set!")
+                }
+                .foregroundColor(.blue)
+                .onTapGesture {
+                    game.pressSet(byPlayer: 1)
+                }
+            } else {
+                VStack {
+                    Image(systemName: "figure.wave.circle")
+                        .font(.largeTitle)
+                    Text("Set!")
+                        .foregroundColor(.gray)
+                }
+            }
+        }
+    }
+    
+    var setButton2: some View {
+        Group {
+            if allDealt && game.playerPlaying != 1 {
+                VStack {
+                    Image(systemName: "figure.wave.circle")
+                        .font(.largeTitle)
+                    Text("Set!")
+                }
+                .foregroundColor(.blue)
+                .onTapGesture {
+                    game.pressSet(byPlayer: 2)
+                }
+            } else {
+                VStack {
+                    Image(systemName: "figure.wave.circle")
+                        .font(.largeTitle)
+                    Text("Set!")
+                        .foregroundColor(.gray)
+                }
+            }
         }
     }
     
@@ -136,7 +196,7 @@ struct SetGameView: View {
     }
     
     var drowMoreButton: some View {
-        ZStack {
+        Group {
             if allDealt && game.canDrawMore() {
                 VStack {
                     Image(systemName: "rectangle.stack.badge.plus")
@@ -165,7 +225,7 @@ struct SetGameView: View {
     }
     
     var hintButton: some View {
-        ZStack {
+        Group {
             if allDealt && game.canHint() {
                 VStack {
                     Image(systemName: "lightbulb")
