@@ -142,6 +142,7 @@ class CardSetGame: ObservableObject {
     func restart() {
         cards.shuffle()
         model = SetGameModel(cards, nuemberOfCardsToDisplay: 12)
+        print("game restarted")
     }
     
     func hint(by playerNumber: Int) {
