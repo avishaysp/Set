@@ -114,6 +114,7 @@ struct SetGameView: View {
         }
     }
     
+    
     var controlsBody2: some View {
         VStack {
             Text("Score: \(game.player2Score)").foregroundColor(.blue)
