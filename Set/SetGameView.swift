@@ -190,7 +190,7 @@ struct SetGameView: View {
         .onTapGesture {
             showingAlert = true
         }
-        .alert("Restart Game?", isPresented: $showingAlert) {
+        .alert("Are you sure you want to restart the game?", isPresented: $showingAlert) {
             Button("Yes", role: .destructive) {
                 withAnimation {
                     dealtCardsIndecies = []
