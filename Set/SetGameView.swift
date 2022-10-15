@@ -50,9 +50,9 @@ struct SetGameView: View {
         AspectVGrid(items: game.cardsToDisplay, aspectRatio: 1.42) {
             card in
             if isDealt(card) {
-                CardView(card: card)
+                CardView(card: card, shadow: game.someoneIsPlaying)
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
-                    .foregroundColor(game.someoneIsPlaying ? game.highlightColor(of: card) : .gray)
+                    .foregroundColor(game.highlightColor(of: card))
                     .zIndex(zIndex(of: card))
                     .onTapGesture {
                         if game.someoneIsPlaying {
@@ -70,7 +70,7 @@ struct SetGameView: View {
     }
     
     var deckBody: some View {
-        return ZStack {
+        ZStack {
             ForEach(game.cardsToDisplay.filter { !isDealt($0) }) { card in
                 ZStack {
                     CardView(card: card)
@@ -108,7 +108,7 @@ struct SetGameView: View {
                 Spacer()
                 drowMoreButton
                 Spacer()
-                hintButton
+                hintButton1
                 Spacer()
             }.padding(.bottom)
         }
@@ -125,7 +125,7 @@ struct SetGameView: View {
                 Spacer()
                 drowMoreButton
                 Spacer()
-                hintButton
+                hintButton2
                 Spacer()
             }.padding(.bottom)
         }.rotationEffect(.degrees(180))
@@ -177,6 +177,8 @@ struct SetGameView: View {
         }
     }
     
+    @State private var showingAlert = false
+    
     var restartButton: some View {
         VStack {
             Image(systemName: "arrow.counterclockwise.circle")
@@ -185,13 +187,19 @@ struct SetGameView: View {
         }
         .foregroundColor(.blue)
         .onTapGesture {
-            withAnimation {
-                dealtCardsIndecies = []
-                allDealt = false
-                withAnimation(.linear(duration: 0.1).delay(0.2)) {
-                    game.restart()
+            showingAlert = true
+        }
+        .alert("Restart Game?", isPresented: $showingAlert) {
+            Button("Yes", role: .destructive) {
+                withAnimation {
+                    dealtCardsIndecies = []
+                    allDealt = false
+                    withAnimation(.linear(duration: 0.1).delay(0.2)) {
+                        game.restart()
+                    }
                 }
             }
+            Button("No", role: .cancel) { }
         }
     }
     
@@ -224,9 +232,9 @@ struct SetGameView: View {
         }
     }
     
-    var hintButton: some View {
+    var hintButton1: some View {
         Group {
-            if allDealt && game.canHint() {
+            if allDealt && game.canSet() {
                 VStack {
                     Image(systemName: "lightbulb")
                         .font(.largeTitle)
@@ -236,7 +244,7 @@ struct SetGameView: View {
                 .onTapGesture {
                     withAnimation(.easeInOut) {
                         if !game.isHinting {
-                            game.hint()
+                            game.hint(by: 1)
                         } else {
                             game.stopHinting()
                         }
@@ -252,6 +260,36 @@ struct SetGameView: View {
             }
         }
     }
+    
+    var hintButton2: some View {
+        Group {
+            if allDealt && game.canSet() {
+                VStack {
+                    Image(systemName: "lightbulb")
+                        .font(.largeTitle)
+                    Text("Hint")
+                }
+                .foregroundColor(.blue)
+                .onTapGesture {
+                    withAnimation(.easeInOut) {
+                        if !game.isHinting {
+                            game.hint(by: 2)
+                        } else {
+                            game.stopHinting()
+                        }
+                    }
+                }
+            } else {
+                VStack {
+                    Image(systemName: "lightbulb")
+                        .font(.largeTitle)
+                    Text("Hint")
+                        .foregroundColor(.gray)
+                }
+            }
+        }
+    }
+    
     private struct Constents {
         static let cornerRadius: CGFloat = 10
         static let aspectRatio: CGFloat = 2/3
@@ -265,12 +303,13 @@ struct SetGameView: View {
 
 struct CardView: View {
     let card: CardSetGame.Card
+    var shadow: Bool = false
     var body: some View {
         GeometryReader { geometry in
             let width = geometry.size.width
             ZStack {
                 let shape = RoundedRectangle(cornerRadius: width * Constents.corner)
-                shape.fill().foregroundColor(.white)
+                shape.fill().foregroundColor(.white).shadow(radius: shadow ? Constents.shadow : 0)
                 shape.stroke(lineWidth: width * Constents.strokeWidth)
                 Text(String(CardSetGame.matchingValueOf(card)!))
                 .foregroundColor(card.cardContent1)
@@ -289,10 +328,11 @@ struct CardView: View {
         static let maxWidth: CGFloat = 240
         static let maxHeight: CGFloat = maxWidth * aspectRatio
         static let corner: CGFloat = 0.12
-        static let strokeWidth: CGFloat = 0.03
+        static let strokeWidth: CGFloat = 0.02
         static let fontSize: CGFloat = maxWidth * 0.1
         static let fontScale: CGFloat = 0.2
         static let padding: CGFloat = 0.06
+        static let shadow: CGFloat = 10
     }
 }
 
@@ -331,12 +371,9 @@ struct ContentView_Previews: PreviewProvider {
             SetGameView(game: game)
             .preferredColorScheme(.light)
             .previewDevice(/*@START_MENU_TOKEN@*/"iPad (9th generation)"/*@END_MENU_TOKEN@*/)
-            .edgesIgnoringSafeArea(.top)
             SetGameView(game: game)
             .preferredColorScheme(.dark)
             .previewDevice(/*@START_MENU_TOKEN@*/"iPad Air (5th generation)"/*@END_MENU_TOKEN@*/)
-            .edgesIgnoringSafeArea(.top)
-
         }
     }
 }

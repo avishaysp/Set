@@ -89,6 +89,9 @@ class CardSetGame: ObservableObject {
         if card.isHinted {
             return .orange
         }
+        if !model.someoneIsPlaying {
+            return .gray
+        }
         switch (card.isChosen, card.isMatched) {
             case (true, true):
                 return .green
@@ -99,8 +102,8 @@ class CardSetGame: ObservableObject {
         }
     }
     
-    func canHint() -> Bool {
-        model.canHint()
+    func canSet() -> Bool {
+        model.canSet()
     }
     
     var isHinting: Bool {
@@ -141,10 +144,8 @@ class CardSetGame: ObservableObject {
         model = SetGameModel(cards, nuemberOfCardsToDisplay: 12)
     }
     
-    func hint() {
-        if canHint() {
-            model.Hint()
-        }
+    func hint(by playerNumber: Int) {
+        model.Hint(by: playerNumber)
     }
     
     func stopHinting() {

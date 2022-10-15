@@ -48,7 +48,6 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
         playerPlaying != 0
     }
     
-    
     private var chosenCardsIndecies: [Int] {
         get { cards.indices.filter({ cards[$0].isChosen }) }
         set {
@@ -110,7 +109,9 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
                 cards[indexOfChosenCard].isChosen = true
             } else { cards[indexOfChosenCard].isChosen.toggle() }
         } else { assertionFailure() }
-        stopHinting()
+        if isHinting {
+            stopHinting()
+        }
         print("Chosen Cards Indecies: \(chosenCardsIndecies)")
     }
     
@@ -118,34 +119,41 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
         /* Changes the cards displayed by mutating their display indecies.
            Utelizes the funcs getFirstThreeEmptyDisplayIndecies() and insertThreeCardsTo(index0: Int, index1: Int, index2: Int) */
         numberOfCardsToDisplay += 3
-        stopHinting()
+        if isHinting {
+            stopHinting()
+        }
         chosenCardsIndecies = []
         print("three cards drawn")
     }
     
-    mutating func Hint() {
-        if canHint() {
-            if !chosenCardsIndecies.isEmpty {
-                if chosenCardsIndecies.count <= 1 {
-                    cards[chosenCardsIndecies[0]].isChosen = false
-                } else if chosenCardsIndecies.count <= 2 {
-                    cards[chosenCardsIndecies[1]].isChosen = false
-                } else if chosenCardsIndecies.count <= 3 {
-                    cards[chosenCardsIndecies[2]].isChosen = false
-                }
-                chosenCardsIndecies = []
+    mutating func Hint(by playerNumber: Int) {  // asuming there is a set when called
+        assert([1, 2].contains(playerNumber))
+        if !chosenCardsIndecies.isEmpty {
+            if chosenCardsIndecies.count <= 1 {
+                cards[chosenCardsIndecies[0]].isChosen = false
+            } else if chosenCardsIndecies.count <= 2 {
+                cards[chosenCardsIndecies[1]].isChosen = false
+            } else if chosenCardsIndecies.count <= 3 {
+                cards[chosenCardsIndecies[2]].isChosen = false
             }
-            let randomIndex = [0, 1, 2].randomElement()!
-            switch randomIndex {
-            case 0:
-                cards[cards.firstIndex { $0.id == threeDisplayedCardsThatMatchByID()!.0 }!].isHinted = true
-            case 1:
-                cards[cards.firstIndex { $0.id == threeDisplayedCardsThatMatchByID()!.1 }!].isHinted = true
-            default:
-                cards[cards.firstIndex { $0.id == threeDisplayedCardsThatMatchByID()!.2 }!].isHinted = true
-            }
-            isHinting = true
+            chosenCardsIndecies = []
         }
+        let randomIndex = [0, 1, 2].randomElement()!
+        switch randomIndex {
+        case 0:
+            cards[cards.firstIndex { $0.id == threeDisplayedCardsThatMatchByID()!.0 }!].isHinted = true
+        case 1:
+            cards[cards.firstIndex { $0.id == threeDisplayedCardsThatMatchByID()!.1 }!].isHinted = true
+        default:
+            cards[cards.firstIndex { $0.id == threeDisplayedCardsThatMatchByID()!.2 }!].isHinted = true
+        }
+        isHinting = true
+        if playerNumber == 1 {
+            player1.score -= 2
+        } else {
+            player2.score -= 2
+        }
+        print("hint given")
     }
     
     mutating func stopHinting() {
@@ -171,7 +179,7 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
         numberOfCardsToDisplay + cards.filter({ $0.isMatched }).count < cards.count
     }
     
-    func canHint() -> Bool {
+    func canSet() -> Bool {
         threeDisplayedCardsThatMatchByID() != nil
     }
     
