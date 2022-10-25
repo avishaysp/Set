@@ -63,7 +63,7 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
     var cardsToDisplay: [Card] {
         var result = [Card]()
         var i = 0
-        while result.count < numberOfCardsToDisplay {
+        while result.count < numberOfCardsToDisplay && i < cards.count {
             if cards[i].isMatched {
                 i += 1
             } else {
@@ -98,7 +98,7 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
                     playerPlaying = 0
                     chosenCardsIndecies = []
                     numberOfCardsToDisplay -= 3
-                    if numberOfCardsToDisplay < 12 {
+                    if numberOfCardsToDisplay < 12 && numberOfCardsToDisplay > 0 {
                         drawThreeCards()
                     }
                 } else {
@@ -181,6 +181,10 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
     
     func canSet() -> Bool {
         threeDisplayedCardsThatMatchByID() != nil
+    }
+    
+    func gameOver() -> Bool {
+        numberOfCardsToDisplay == 0
     }
     
     func threeDisplayedCardsThatMatchByID() -> (Int, Int, Int)? {

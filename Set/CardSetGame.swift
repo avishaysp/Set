@@ -36,11 +36,13 @@ class CardSetGame: ObservableObject {
             }
         }
         cards.shuffle()
-        model = SetGameModel(cards, nuemberOfCardsToDisplay: 12)
+        model = SetGameModel(cards, nuemberOfCardsToDisplay: CardSetGame.numberOfCardsToDsiplay)
         
     }
     
     // MARK: - Data
+    
+    static let numberOfCardsToDsiplay = 12
     
     static let colors = [Color.red, Color.purple, Color.green]
     
@@ -57,7 +59,6 @@ class CardSetGame: ObservableObject {
         (.triangle, .blank, "△"), (.triangle, .half, "◮"), (.triangle, .full, "▲"),
         (.square, .blank, "□"),   (.square, .half, "◨"),   (.square, .full, "■")
     ]
-    
 
     
     //MARK: - Get Data
@@ -130,6 +131,10 @@ class CardSetGame: ObservableObject {
         model.someoneIsPlaying
     }
     
+    func over() -> Bool {
+        model.gameOver()
+    }
+    
     // MARK: - Intents
     
     func choose(_ card: Card) {
@@ -141,7 +146,7 @@ class CardSetGame: ObservableObject {
     }
     func restart() {
         cards.shuffle()
-        model = SetGameModel(cards, nuemberOfCardsToDisplay: 12)
+        model = SetGameModel(cards, nuemberOfCardsToDisplay: CardSetGame.numberOfCardsToDsiplay)
         print("game restarted")
     }
     

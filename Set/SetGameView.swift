@@ -17,10 +17,14 @@ struct SetGameView: View {
         VStack {
             controlsBody2
             ZStack(alignment: .bottomTrailing) {
-                gameBody
-                Spacer()
+                if !game.over() {
+                    gameBody
+                    Spacer()
+                }
                 if !allDealt {
                     deckBody
+                } else {
+                    Spacer()
                 }
             }
             controlsBody1
@@ -45,7 +49,8 @@ struct SetGameView: View {
         -Double(game.cardsToDisplay.firstIndex(where: { $0.id == card.id } ) ?? 0 )
     }
 
-    
+    @State private var showingGameFinishedAlert = false
+        
     var gameBody: some View {
         AspectVGrid(items: game.cardsToDisplay, aspectRatio: 1.42) {
             card in
@@ -57,12 +62,16 @@ struct SetGameView: View {
                     .onTapGesture {
                         if game.someoneIsPlaying {
                             game.choose(card)
+                            if game.over() {
+                                showingGameFinishedAlert = true
+                            }
                         }
                     }
-                    .transition(.scale.combined(with: .opacity.combined(with: .move(edge: .bottom))))
-                    } else { Color.clear }
-            }.padding([.leading, .bottom, .trailing])
+            } else { Color.clear }
         }
+        .padding([.leading, .bottom, .trailing])
+    }
+    
     
     private func coinFlip() -> Bool {
         let results = [true, false]
@@ -83,7 +92,6 @@ struct SetGameView: View {
             }
         }
         .frame(width: Constents.undealtWidth, height: Constents.undealtHeight)
-        .transition(.asymmetric(insertion: .opacity, removal:  .opacity.animation(.easeInOut.delay(Constents.totalDealDuration))))
         .onTapGesture {
             for i in 0..<game.cards.count {
                 withAnimation(.easeInOut.delay(Double(i) * (Constents.totalDealDuration / Double(game.cardsToDisplay.count))))
@@ -111,6 +119,17 @@ struct SetGameView: View {
                 hintButton1
                 Spacer()
             }.padding(.bottom)
+        }
+        .alert("You Finished The Game", isPresented: $showingGameFinishedAlert) {
+            Button("Play again", role: .cancel) {
+                withAnimation {
+                    dealtCardsIndecies = []
+                    allDealt = false
+                    withAnimation(.linear(duration: 0.1).delay(0.2)) {
+                        game.restart()
+                    }
+                }
+            }
         }
     }
     
@@ -178,7 +197,7 @@ struct SetGameView: View {
         }
     }
     
-    @State private var showingAlert = false
+    @State private var showingRestartAlert = false
     
     var restartButton: some View {
         VStack {
@@ -188,9 +207,9 @@ struct SetGameView: View {
         }
         .foregroundColor(.blue)
         .onTapGesture {
-            showingAlert = true
+            showingRestartAlert = true
         }
-        .alert("Are you sure you want to restart the game?", isPresented: $showingAlert) {
+        .alert("Are you sure you want to restart the game?", isPresented: $showingRestartAlert) {
             Button("Yes", role: .destructive) {
                 withAnimation {
                     dealtCardsIndecies = []
@@ -324,8 +343,6 @@ struct CardView: View {
 
     private struct Constents {
         static let aspectRatio: CGFloat = 2/3
-        static let undealtWidth: CGFloat = 270
-        static let undealtHeight: CGFloat = undealtWidth * aspectRatio
         static let maxWidth: CGFloat = 240
         static let maxHeight: CGFloat = maxWidth * aspectRatio
         static let corner: CGFloat = 0.12
@@ -333,7 +350,7 @@ struct CardView: View {
         static let fontSize: CGFloat = maxWidth * 0.1
         static let fontScale: CGFloat = 0.2
         static let padding: CGFloat = 0.06
-        static let shadow: CGFloat = 10
+        static let shadow: CGFloat = maxWidth * 0.04
     }
 }
 
