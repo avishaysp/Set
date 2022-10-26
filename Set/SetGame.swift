@@ -19,17 +19,17 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
     private(set) var player1: Player
     private(set) var player2: Player
     
-    var playerPlaying: Int {
+    var playerPlaying: Int? {
         get {
             switch (player1.isPlaying, player2.isPlaying) {
             case (true, true):
                 assertionFailure()
             case (false, false):
-                return 0
+                return nil
             default:
                 return player1.isPlaying ? 1 : 2
             }
-            return 0
+            return nil
         }
         set {
             assert([0, 1, 2].contains(newValue))
@@ -165,7 +165,7 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
     mutating func declareSet(by playerNumber: Int) {
         assert([1, 2].contains(playerNumber))
         playerPlaying = playerNumber
-        print("plying: \(playerPlaying)")
+        print("now plying: \(playerPlaying!)")
     }
     
     mutating func undeclareSet() {

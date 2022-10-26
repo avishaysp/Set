@@ -123,7 +123,7 @@ class CardSetGame: ObservableObject {
         model.player2.score
     }
     
-    var playerPlaying: Int {
+    var playerPlaying: Int? {
         model.playerPlaying
     }
     
@@ -160,7 +160,7 @@ class CardSetGame: ObservableObject {
     
     func pressSet(byPlayer playerNumber: Int) {
         assert([1, 2].contains(playerNumber))
-        if model.playerPlaying == 0 {
+        if model.playerPlaying == nil {
             model.declareSet(by: playerNumber)
         } else {
             model.undeclareSet()
