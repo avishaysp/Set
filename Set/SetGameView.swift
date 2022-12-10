@@ -116,7 +116,7 @@ struct SetGameView: View {
                 Spacer()
                 drowMoreButton
                 Spacer()
-                hintButton1
+                hintButton(player: 1, game: game, allDealt: allDealt)
                 Spacer()
             }.padding(.bottom)
         }
@@ -145,7 +145,7 @@ struct SetGameView: View {
                 Spacer()
                 drowMoreButton
                 Spacer()
-                hintButton2
+                hintButton(player: 2, game: game, allDealt: allDealt)
                 Spacer()
             }.padding(.bottom)
         }.rotationEffect(.degrees(180))
@@ -161,8 +161,8 @@ struct SetGameView: View {
                 }
                 .foregroundColor(.blue)
                 .onTapGesture {
-                    game.pressSet(byPlayer: 1)
                     game.resetChosenCards()
+                    game.pressSet(byPlayer: 1)
                 }
             } else {
                 VStack {
@@ -185,8 +185,8 @@ struct SetGameView: View {
                 }
                 .foregroundColor(.blue)
                 .onTapGesture {
-                    game.pressSet(byPlayer: 2)
                     game.resetChosenCards()
+                    game.pressSet(byPlayer: 2)
                 }
             } else {
                 VStack {
@@ -236,6 +236,7 @@ struct SetGameView: View {
                 .foregroundColor(.blue)
                 .onTapGesture {
                     withAnimation {
+                        game.resetChosenCards()
                         game.drawThreeCards()
                         deal(game.cardsToDisplay[game.cardsToDisplay.count-3])
                         deal(game.cardsToDisplay[game.cardsToDisplay.count-2])
@@ -254,63 +255,42 @@ struct SetGameView: View {
         }
     }
     
-    var hintButton1: some View {
-        Group {
-            if allDealt && game.canSet() {
-                VStack {
-                    Image(systemName: "lightbulb")
-                        .font(.largeTitle)
-                    Text("Hint")
-                }
-                .foregroundColor(.blue)
-                .onTapGesture {
-                    withAnimation(.easeInOut) {
-                        if !game.isHinting {
-                            game.hint(by: 1)
-                        } else {
-                            game.stopHinting()
+    struct hintButton: View {
+        let player: Int
+        var game: CardSetGame
+        var allDealt: Bool
+        var body: some View {
+            Group {
+                if allDealt && game.canSet() {
+                    VStack {
+                        Image(systemName: "lightbulb")
+                            .font(.largeTitle)
+                        Text("Hint")
+                    }
+                    .foregroundColor(.blue)
+                    .onTapGesture {
+                        withAnimation(.easeInOut) {
+                            if !game.isHinting {
+                                game.resetChosenCards()
+                                game.hint(by: player)
+                            } else {
+                                game.stopHinting()
+                            }
                         }
                     }
-                }
-            } else {
-                VStack {
-                    Image(systemName: "lightbulb")
-                        .font(.largeTitle)
-                    Text("Hint")
-                        .foregroundColor(.gray)
+                } else {
+                    VStack {
+                        Image(systemName: "lightbulb")
+                            .font(.largeTitle)
+                        Text("Hint")
+                            .foregroundColor(.gray)
+                    }
                 }
             }
         }
     }
     
-    var hintButton2: some View {
-        Group {
-            if allDealt && game.canSet() {
-                VStack {
-                    Image(systemName: "lightbulb")
-                        .font(.largeTitle)
-                    Text("Hint")
-                }
-                .foregroundColor(.blue)
-                .onTapGesture {
-                    withAnimation(.easeInOut) {
-                        if !game.isHinting {
-                            game.hint(by: 2)
-                        } else {
-                            game.stopHinting()
-                        }
-                    }
-                }
-            } else {
-                VStack {
-                    Image(systemName: "lightbulb")
-                        .font(.largeTitle)
-                    Text("Hint")
-                        .foregroundColor(.gray)
-                }
-            }
-        }
-    }
+    
     
     private struct Constents {
         static let cornerRadius: CGFloat = 10

@@ -122,7 +122,6 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
         if isHinting {
             stopHinting()
         }
-        chosenCardsIndecies = []
         print("three cards drawn")
     }
     
@@ -140,7 +139,6 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
             } else if chosenCardsIndecies.count <= 3 {
                 cards[chosenCardsIndecies[2]].isChosen = false
             }
-            chosenCardsIndecies = []
         }
         let randomIndex = [0, 1, 2].randomElement()!
         switch randomIndex {
@@ -169,7 +167,7 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
     mutating func declareSet(by playerNumber: Int) {
         assert([1, 2].contains(playerNumber))
         playerPlaying = playerNumber
-        print("now plying: \(playerPlaying!)")
+        print("now playing: \(playerPlaying!)")
     }
     
     mutating func undeclareSet() {
