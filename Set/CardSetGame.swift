@@ -150,6 +150,10 @@ class CardSetGame: ObservableObject {
         print("game restarted")
     }
     
+    func resetChosenCards() {
+        model.resetChosenCards()
+    }
+    
     func hint(by playerNumber: Int) {
         model.Hint(by: playerNumber)
     }

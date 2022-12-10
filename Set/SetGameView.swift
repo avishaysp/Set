@@ -31,18 +31,18 @@ struct SetGameView: View {
         }
     }
     
-    @State private var dealtCardsIndecies = Set<Int>()
+    @State private var dealtCardsIds = Set<Int>()
     
     private func deal(_ card: CardSetGame.Card) {
-        dealtCardsIndecies.insert(card.id)
+        dealtCardsIds.insert(card.id)
     }
     
     private func undeal(_ card: CardSetGame.Card) {
-        dealtCardsIndecies.remove(card.id)
+        dealtCardsIds.remove(card.id)
     }
     
     private func isDealt(_ card: CardSetGame.Card) -> Bool {
-        dealtCardsIndecies.contains(card.id)
+        dealtCardsIds.contains(card.id)
     }
     
     private func zIndex(of card: CardSetGame.Card) -> Double {
@@ -123,7 +123,7 @@ struct SetGameView: View {
         .alert("You Finished The Game", isPresented: $showingGameFinishedAlert) {
             Button("Play again", role: .cancel) {
                 withAnimation {
-                    dealtCardsIndecies = []
+                    dealtCardsIds = []
                     allDealt = false
                     withAnimation(.linear(duration: 0.1).delay(0.2)) {
                         game.restart()
@@ -162,6 +162,7 @@ struct SetGameView: View {
                 .foregroundColor(.blue)
                 .onTapGesture {
                     game.pressSet(byPlayer: 1)
+                    game.resetChosenCards()
                 }
             } else {
                 VStack {
@@ -185,6 +186,7 @@ struct SetGameView: View {
                 .foregroundColor(.blue)
                 .onTapGesture {
                     game.pressSet(byPlayer: 2)
+                    game.resetChosenCards()
                 }
             } else {
                 VStack {
@@ -212,7 +214,7 @@ struct SetGameView: View {
         .alert("Are you sure you want to restart the game?", isPresented: $showingRestartAlert) {
             Button("Yes", role: .destructive) {
                 withAnimation {
-                    dealtCardsIndecies = []
+                    dealtCardsIds = []
                     allDealt = false
                     withAnimation(.linear(duration: 0.1).delay(0.2)) {
                         game.restart()

@@ -45,7 +45,7 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
     }
     
     var someoneIsPlaying: Bool {
-        playerPlaying != 0
+        playerPlaying != nil
     }
     
     private var chosenCardsIndecies: [Int] {
@@ -124,6 +124,10 @@ struct SetGame<CardContent1: Equatable, CardContent2: Equatable, CardContent3: E
         }
         chosenCardsIndecies = []
         print("three cards drawn")
+    }
+    
+    mutating func resetChosenCards() {
+        chosenCardsIndecies = []
     }
     
     mutating func Hint(by playerNumber: Int) {  // asuming there is a set when called
